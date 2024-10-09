@@ -1,0 +1,30 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DIRECT_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Hotel {
+  id        String   @id @unique @default(cuid())
+  name      String   @db.VarChar(255)
+  country   String
+  city      String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  brandName String?
+  brand     Brand?   @relation(fields: [brandName], references: [name])
+}
+
+model Brand {
+  id     String  @id @unique @default(cuid())
+  name   String  @unique @db.VarChar(255)
+  hq     String
+  ceo    String
+  hotels Hotel[] @relation
+}
